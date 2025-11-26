@@ -2,11 +2,15 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { fetchGithubUser } from "../api/github";
 import UserCard from "./UserCard";
+import { FaClock, FaUser } from "react-icons/fa";
+import RecentSearches from "./RecentSearches";
 
 const UserSearch = () => {
   const [username, setUseranme] = useState("");
   const [submittedUsername, setSubmittedUsername] = useState("");
+  const [recentUsers, setRecentUsers] = useState<string[]>([]);
 
+  // adrianhajdin
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["users", submittedUsername],
     queryFn: () => fetchGithubUser(submittedUsername),
@@ -15,7 +19,21 @@ const UserSearch = () => {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setSubmittedUsername(username.trim());
+    const user = username.trim();
+
+    if (!user) return;
+
+    setSubmittedUsername(user);
+
+    setRecentUsers((prev) => {
+      const updated = [user, ...prev.filter((value) => value !== user)];
+      return updated.slice(0, 5);
+    });
+  };
+
+  const onRecentSearchSelect = (user: string) => {
+    setUseranme(user);
+    setSubmittedUsername(user);
   };
 
   return (
@@ -36,7 +54,7 @@ const UserSearch = () => {
         />
         <button
           type="submit"
-          className="text-white bg-blue-600 px-6 py-2 rounded-sm text-lg font-semibold tracking-wider"
+          className="text-white bg-blue-600 px-6 py-2 rounded-sm text-lg font-semibold"
         >
           Search
         </button>
@@ -46,6 +64,10 @@ const UserSearch = () => {
       {isError && <p className="text-red-600">{error.message}</p>}
 
       {data && <UserCard user={data} />}
+
+      {recentUsers.length > 0 && (
+        <RecentSearches users={recentUsers} onSelect={onRecentSearchSelect} />
+      )}
     </>
   );
 };
