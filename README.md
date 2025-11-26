@@ -2,6 +2,10 @@
 
 A modern, responsive web application for searching and discovering GitHub users. Built with React, TypeScript, and Vite, this app provides an intuitive interface to search for GitHub users, view their profiles, and manage recent searches.
 
+**Live Preview** : &nbsp; [github-finder-omega-taupe.vercel.app](https://github-finder-omega-taupe.vercel.app/)
+
+---
+
 ## Features
 
 - 🔍 **User Search**: Search for GitHub users by username
@@ -31,17 +35,20 @@ Before you begin, ensure you have the following installed:
 ## Installation
 
 1. Clone the repository:
+
 ```bash
 git clone <repository-url>
 cd github-finder
 ```
 
 2. Install dependencies:
+
 ```bash
 npm install
 ```
 
 3. Create a `.env` file in the root directory and add your GitHub API URL:
+
 ```env
 VITE_GITHUB_API_URL=https://api.github.com
 ```
@@ -53,6 +60,7 @@ VITE_GITHUB_API_URL=https://api.github.com
 ### Development
 
 Start the development server:
+
 ```bash
 npm run dev
 ```
@@ -62,6 +70,7 @@ The app will be available at `http://localhost:5173` (or the port Vite assigns).
 ### Build
 
 Build the project for production:
+
 ```bash
 npm run build
 ```
@@ -71,6 +80,7 @@ The production build will be in the `dist` directory.
 ### Preview
 
 Preview the production build locally:
+
 ```bash
 npm run preview
 ```
@@ -78,6 +88,7 @@ npm run preview
 ### Lint
 
 Run ESLint to check for code issues:
+
 ```bash
 npm run lint
 ```
@@ -123,8 +134,8 @@ github-finder/
 
 ## Environment Variables
 
-| Variable | Description | Default |
-|----------|-------------|---------|
+| Variable              | Description         | Default                  |
+| --------------------- | ------------------- | ------------------------ |
 | `VITE_GITHUB_API_URL` | GitHub API base URL | `https://api.github.com` |
 
 ## Contributing
