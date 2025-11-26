@@ -1,73 +1,136 @@
-# React + TypeScript + Vite
+# GitHub Finder
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, responsive web application for searching and discovering GitHub users. Built with React, TypeScript, and Vite, this app provides an intuitive interface to search for GitHub users, view their profiles, and manage recent searches.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 🔍 **User Search**: Search for GitHub users by username
+- 💡 **Autocomplete Suggestions**: Real-time search suggestions with debounced input
+- 📋 **Recent Searches**: Automatically saves and displays your recent searches in localStorage
+- 🎨 **Modern UI**: Clean, responsive design built with Tailwind CSS
+- ⚡ **Fast Performance**: Optimized with React Query for efficient data fetching and caching
+- 🔄 **Query Prefetching**: Recent searches are prefetched on hover for instant loading
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **React 19** - UI library
+- **TypeScript** - Type safety
+- **Vite** - Build tool and dev server
+- **Tailwind CSS** - Utility-first CSS framework
+- **React Query (TanStack Query)** - Data fetching, caching and state management
+- **React Icons** - Icon library
+- **use-debounce** - Input debouncing for search suggestions
 
-## Expanding the ESLint configuration
+## Prerequisites
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Before you begin, ensure you have the following installed:
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Node.js (v18 or higher)
+- npm or yarn
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Installation
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd github-finder
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+2. Install dependencies:
+```bash
+npm install
 ```
+
+3. Create a `.env` file in the root directory and add your GitHub API URL:
+```env
+VITE_GITHUB_API_URL=https://api.github.com
+```
+
+> **Note**: The GitHub API is public and doesn't require authentication for basic user searches. However, if you need higher rate limits, you can use a personal access token.
+
+## Usage
+
+### Development
+
+Start the development server:
+```bash
+npm run dev
+```
+
+The app will be available at `http://localhost:5173` (or the port Vite assigns).
+
+### Build
+
+Build the project for production:
+```bash
+npm run build
+```
+
+The production build will be in the `dist` directory.
+
+### Preview
+
+Preview the production build locally:
+```bash
+npm run preview
+```
+
+### Lint
+
+Run ESLint to check for code issues:
+```bash
+npm run lint
+```
+
+## Project Structure
+
+```
+github-finder/
+├── public/              # Static assets
+├── src/
+│   ├── api/
+│   │   └── github.ts    # GitHub API functions
+│   ├── components/
+│   │   ├── UserCard.tsx           # User profile card component
+│   │   ├── UserSearch.tsx         # Main search component
+│   │   ├── RecentSearches.tsx     # Recent searches list
+│   │   └── SuggestionDropdown.tsx # Autocomplete dropdown
+│   ├── types/
+│   │   └── user.ts      # TypeScript type definitions
+│   ├── App.tsx          # Main app component
+│   ├── main.tsx         # Application entry point
+│   └── index.css        # Global styles
+├── index.html
+├── package.json
+├── tsconfig.json
+└── vite.config.ts
+```
+
+## How It Works
+
+1. **Search**: Enter a GitHub username in the search input
+2. **Suggestions**: As you type, the app shows autocomplete suggestions (after 2+ characters)
+3. **Submit**: Click "Search" or select a suggestion to fetch the user profile
+4. **Display**: View the user's profile card with avatar, name, bio, and a link to their GitHub profile
+5. **Recent Searches**: Your searches are automatically saved and displayed in the recent searches section
+
+## Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
+
+## Environment Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `VITE_GITHUB_API_URL` | GitHub API base URL | `https://api.github.com` |
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is open source and available under the [MIT License](LICENSE).
