@@ -1,1 +1,5 @@
 @import "tailwindcss";
+
+body {
+  @apply bg-slate-100 h-[100vh] w-[100vw] flex justify-center items-center;
+}
