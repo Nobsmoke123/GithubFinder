@@ -9,7 +9,7 @@ const RecentSearches: React.FC<{
   const queryClient = useQueryClient();
 
   return (
-    <div className="mt-6 bg-gray-200/50 px-6 py-4 rounded-md">
+    <div className="mt-6 bg-gray-200/50 px-6 py-4 rounded-md h-[20vh] overflow-y-scroll">
       <div className="flex justify-start items-center gap-2 mb-4">
         <FaClock className="text-zinc-900" />
         <h3 className="text-lg font-semibold text-zinc-900">Recent Searches</h3>
@@ -20,10 +20,10 @@ const RecentSearches: React.FC<{
           <li
             key={user}
             className="bg-slate-300 hover:bg-neutral-500 rounded px-4 py-2 text-zinc-900 hover:text-white"
+            onClick={() => onSelect(user)}
           >
             <button
               className="flex justify-start items-center gap-2  text-md font-semibold"
-              onClick={() => onSelect(user)}
               onMouseEnter={() => {
                 queryClient.prefetchQuery({
                   queryKey: ["users", user],

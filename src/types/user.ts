@@ -33,3 +33,9 @@ export type GithubUser = {
   created_at: string;
   updated_at: string;
 };
+
+export type GithubUserSearchResult = {
+  total_count: number;
+  incomplete_results: boolean;
+  items: GithubUser[];
+};

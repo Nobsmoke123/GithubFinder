@@ -1,20 +1,37 @@
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
-import { fetchGithubUser } from "../api/github";
+import { useEffect, useState } from "react";
+import { fetchGithubUser, searchGithubUser } from "../api/github";
 import UserCard from "./UserCard";
-import { FaClock, FaUser } from "react-icons/fa";
 import RecentSearches from "./RecentSearches";
+import { useDebounce } from "use-debounce";
+import SuggestionDropdown from "./SuggestionDropdown";
 
 const UserSearch = () => {
   const [username, setUseranme] = useState("");
   const [submittedUsername, setSubmittedUsername] = useState("");
-  const [recentUsers, setRecentUsers] = useState<string[]>([]);
+  const [recentUsers, setRecentUsers] = useState<string[]>(() => {
+    const stored = localStorage.getItem("recentUsers");
+    return stored ? JSON.parse(stored) : [];
+  });
+  const [debouncedUsername] = useDebounce(username, 300);
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
-  // adrianhajdin
-  const { data, isLoading, isError, error } = useQuery({
+  useEffect(() => {
+    localStorage.setItem("recentUsers", JSON.stringify(recentUsers));
+  }, [recentUsers]);
+
+  // Query to fetch a github user
+  const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["users", submittedUsername],
     queryFn: () => fetchGithubUser(submittedUsername),
     enabled: !!submittedUsername,
+  });
+
+  // Query to fetch github user suggestions
+  const { data: suggestions } = useQuery({
+    queryKey: ["github-user-suggestions", debouncedUsername],
+    queryFn: () => searchGithubUser(debouncedUsername),
+    enabled: debouncedUsername.length > 1,
   });
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -24,10 +41,11 @@ const UserSearch = () => {
     if (!user) return;
 
     setSubmittedUsername(user);
+    setUseranme("");
 
     setRecentUsers((prev) => {
       const updated = [user, ...prev.filter((value) => value !== user)];
-      return updated.slice(0, 5);
+      return updated;
     });
   };
 
@@ -36,22 +54,49 @@ const UserSearch = () => {
     setSubmittedUsername(user);
   };
 
+  const onSuggestionListClick = (username: string) => {
+    setUseranme(username);
+    setShowSuggestions(false);
+
+    if (submittedUsername !== username) {
+      setSubmittedUsername(username);
+      setRecentUsers((prev) => [
+        username,
+        ...prev.filter((value) => value !== username),
+      ]);
+    } else {
+      refetch();
+    }
+  };
+
   return (
     <>
       <form
         onSubmit={handleSubmit}
         className="mt-4 flex flex-col justify-center gap-2"
       >
-        <input
-          type="text"
-          name="username"
-          value={username}
-          placeholder="Enter Github Username..."
-          className="bg-slate-100 text-zinc-900 px-2 py-1 text-lg font-semibold outline-2 rounded-sm outline-zinc-400"
-          onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-            setUseranme(event.target.value)
-          }
-        />
+        <div className="relative">
+          <input
+            type="text"
+            name="username"
+            value={username}
+            placeholder="Enter Github Username..."
+            className="w-full bg-slate-100 text-zinc-900 px-2 py-1 text-lg font-semibold outline-2 rounded-sm outline-zinc-400"
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+              const value = event.target.value;
+              setUseranme(value);
+              setShowSuggestions(value.trim().length > 1);
+            }}
+          />
+
+          {showSuggestions && suggestions && suggestions?.length > 0 && (
+            <SuggestionDropdown
+              suggestions={suggestions}
+              onClick={onSuggestionListClick}
+            />
+          )}
+        </div>
+
         <button
           type="submit"
           className="text-white bg-blue-600 px-6 py-2 rounded-sm text-lg font-semibold"

@@ -1,4 +1,4 @@
-import type { GithubUser } from "../types/user";
+import type { GithubUser, GithubUserSearchResult } from "../types/user";
 
 export const fetchGithubUser = async (username: string) => {
   const res = await fetch(
@@ -11,4 +11,17 @@ export const fetchGithubUser = async (username: string) => {
 
   const data: GithubUser = await res.json();
   return data;
+};
+
+export const searchGithubUser = async (query: string) => {
+  const res = await fetch(
+    `${import.meta.env.VITE_GITHUB_API_URL}/search/users?q=${query}`
+  );
+
+  if (!res.ok) {
+    throw new Error("User not found.");
+  }
+
+  const data: GithubUserSearchResult = await res.json();
+  return data.items;
 };
